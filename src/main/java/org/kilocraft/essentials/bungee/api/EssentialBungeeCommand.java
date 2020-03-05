@@ -9,6 +9,7 @@ import org.kilocraft.essentials.bungee.KiloEssentialsBungee;
 import org.kilocraft.essentials.bungee.KiloEssentialsBungeePlugin;
 
 import java.util.UUID;
+import java.util.logging.Logger;
 
 public abstract class EssentialBungeeCommand implements IEssentialCommand {
     private final String label;
@@ -16,7 +17,7 @@ public abstract class EssentialBungeeCommand implements IEssentialCommand {
     protected final transient String permission;
     protected final transient KiloEssentialsBungeePlugin essentials = KiloEssentialsBungee.getInstance();
     protected final transient ProxyServer server = essentials.getServer();
-    protected final transient PluginLogger logger = (PluginLogger) server.getLogger();
+    protected final transient Logger logger = server.getLogger();
     private transient String usage;
 
     public EssentialBungeeCommand(final String label) {

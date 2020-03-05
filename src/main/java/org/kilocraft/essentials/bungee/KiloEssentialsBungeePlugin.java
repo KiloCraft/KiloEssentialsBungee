@@ -1,30 +1,30 @@
 package org.kilocraft.essentials.bungee;
 
 import net.md_5.bungee.api.ProxyServer;
-import net.md_5.bungee.api.plugin.Command;
 import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.api.plugin.PluginLogger;
-import org.kilocraft.essentials.bungee.command.EssentialsBungeeCommand;
+import org.kilocraft.essentials.bungee.commands.EssentialsBungeeCommand;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
+import java.util.logging.Logger;
 
 public final class KiloEssentialsBungeePlugin extends Plugin implements KiloEssentialsBungee {
     private static final String MOD_CLASS = "org.kilocraft.essentials.KiloEssentials";
     static KiloEssentialsBungeePlugin instance;
-    private final PluginLogger logger = (PluginLogger) this.getLogger();
-    private ProxyServer server;
+    private Logger logger;
     private Properties lang;
     private List<EssentialsBungeeCommand> commands;
 
     @Override
     public void onEnable() {
-        instance = this;
-        this.server = this.getProxy();
-        logger.info("Setting up KiloEssentials-Bungee");
+        this.logger = this.getLogger();
         this.lang = new Properties();
+        instance = this;
+
+        logger.info("Setting up KiloEssentials-Bungee");
 
         try {
             this.lang.load(this.getClass().getClassLoader().getResourceAsStream("lang.properties"));
@@ -42,22 +42,22 @@ public final class KiloEssentialsBungeePlugin extends Plugin implements KiloEsse
         }};
 
         for (EssentialsBungeeCommand command : commands) {
-            this.server.getPluginManager().registerCommand(this, command.build());
+            this.getProxy().getPluginManager().registerCommand(this, command.build());
         }
 
-        this.server.getPluginManager().registerListener(this, new Events());
+        this.getProxy().getPluginManager().registerListener(this, new Events());
     }
 
     @Override
     public void onDisable() {
         logger.info("Disabling KiloEssentials-Bungee");
 
-        this.server.getPluginManager().unregisterCommands(this);
-        this.server.getPluginManager().unregisterListeners(this);
+        this.getProxy().getPluginManager().unregisterCommands(this);
+        this.getProxy().getPluginManager().unregisterListeners(this);
     }
 
     public ProxyServer getServer() {
-        return this.server;
+        return this.getProxy();
     }
 
     private boolean essentialsPresent() {

@@ -1,4 +1,4 @@
-package org.kilocraft.essentials.bungee.command;
+package org.kilocraft.essentials.bungee.commands;
 
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
