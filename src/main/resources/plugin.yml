@@ -1,0 +1,4 @@
+name: KiloEssentials-Bungee
+version: @version@
+main: org.kilocraft.essentials.bungee.KiloEssentialsBungeePlugin
+description: Bungeecord Support for KiloEssentials
