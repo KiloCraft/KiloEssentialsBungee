@@ -16,8 +16,4 @@ public interface IEssentialCommand {
     String[] getAlias();
 
     void withUsage(final String key);
-
-    List<String> onCommandCompletion(final CommandSender sender, final String cursor, final String[] args);
-
-    void execute(final CommandSender sender, final String[] args);
 }

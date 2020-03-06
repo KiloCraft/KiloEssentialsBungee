@@ -2,8 +2,9 @@ package org.kilocraft.essentials.bungee;
 
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.plugin.Plugin;
-import net.md_5.bungee.api.plugin.PluginLogger;
-import org.kilocraft.essentials.bungee.commands.EssentialsBungeeCommand;
+import org.kilocraft.essentials.bungee.api.EssentialBungeeCommand;
+import org.kilocraft.essentials.bungee.commands.BungeePluginsCommand;
+import org.kilocraft.essentials.bungee.commands.InfoCommand;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -16,7 +17,7 @@ public final class KiloEssentialsBungeePlugin extends Plugin implements KiloEsse
     static KiloEssentialsBungeePlugin instance;
     private Logger logger;
     private Properties lang;
-    private List<EssentialsBungeeCommand> commands;
+    private List<EssentialBungeeCommand> commands;
 
     @Override
     public void onEnable() {
@@ -25,6 +26,7 @@ public final class KiloEssentialsBungeePlugin extends Plugin implements KiloEsse
         instance = this;
 
         logger.info("Setting up KiloEssentials-Bungee");
+        logger.info("This Plugin is only for connecting KiloEssentials to BungeeCord");
 
         try {
             this.lang.load(this.getClass().getClassLoader().getResourceAsStream("lang.properties"));
@@ -33,16 +35,13 @@ public final class KiloEssentialsBungeePlugin extends Plugin implements KiloEsse
             e.printStackTrace();
         }
 
-        if (!essentialsPresent()) {
-            logger.warning("KiloEssentials Mod is not present!");
-        }
-
-        commands = new ArrayList<EssentialsBungeeCommand>(){{
-            this.add(new EssentialsBungeeCommand());
+        commands = new ArrayList<EssentialBungeeCommand>(){{
+            this.add(new InfoCommand());
+            this.add(new BungeePluginsCommand());
         }};
 
-        for (EssentialsBungeeCommand command : commands) {
-            this.getProxy().getPluginManager().registerCommand(this, command.build());
+        for (EssentialBungeeCommand command : commands) {
+            this.getProxy().getPluginManager().registerCommand(this, command);
         }
 
         this.getProxy().getPluginManager().registerListener(this, new Events());
@@ -60,20 +59,13 @@ public final class KiloEssentialsBungeePlugin extends Plugin implements KiloEsse
         return this.getProxy();
     }
 
-    private boolean essentialsPresent() {
-        try {
-            Class.forName(MOD_CLASS);
-            ClassLoader.getSystemClassLoader().loadClass(MOD_CLASS);
-
-            return true;
-        } catch (Exception ignored) {
-            return false;
-        }
-    }
-
-    String getLang(String key, Object... objects) {
+    public String getLang(String key, Object... objects) {
         String lang = instance.lang.getProperty(key);
         return objects == null ? lang : String.format(lang, objects);
+    }
+
+    public static boolean isEnabled() {
+        return instance != null;
     }
 
 }
